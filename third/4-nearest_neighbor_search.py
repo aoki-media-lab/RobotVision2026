@@ -1,5 +1,5 @@
 # require skimage and sklearn
-# if 'skimage' or 'sklearn' was not found, pip install -U scikit-learn scikit-image
+# if 'skimage' or 'sklearn' was not found, run `uv sync` in the repository root
 
 import cv2
 import numpy as np

@@ -1,12 +1,13 @@
 [project]
-name = "robotvision2025"
+name = "robotvision2026"
 version = "0.1.0"
-description = "Add your description here"
+description = "Robot Vision 2026 講義用ソースコード"
 readme = "README.md"
-requires-python = ">=3.11"
+requires-python = ">=3.12"
 dependencies = [
-    "jupyterlab>=4.5.0",
-    "numpy==2.1.1",
-    "opencv-contrib-python==4.12.0.88",  # or 4.11.0.86
-    "opencv-python==4.12.0.88",  # or 4.11.0.86
+    "jupyterlab>=4.6.4",
+    "numpy==2.5.3",
+    "opencv-contrib-python==5.0.0.93",
+    "scikit-image>=0.26.0",
+    "scikit-learn>=1.9.1",
 ]
