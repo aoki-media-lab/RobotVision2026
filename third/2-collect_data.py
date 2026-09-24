@@ -1,5 +1,5 @@
 # requirement: opencv-contrib-python
-# if 'bgsegm' was not found, pip install --user opencv-contrib-python
+# if 'bgsegm' was not found, run `uv sync` in the repository root
 
 import glob
 
