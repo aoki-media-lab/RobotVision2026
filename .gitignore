@@ -7,3 +7,6 @@ __pycache__
 *.pyc
 .ipynb_checkpoints
 *.npy
+
+# 録画した動画 (common の r キー)
+recordings/
