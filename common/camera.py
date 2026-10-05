@@ -20,6 +20,12 @@
     r : 録画の開始/停止 (recordings/ に保存される)
     v : カメラ ⇔ 最後に録画した動画 の切り替え
     スペース : 一時停止/再開
+    それ以外のキーは run(process, on_key=関数) で受け取れる
+
+画面左上の表示:
+    FPS        : 1秒あたりに処理できたフレーム数 (カメラの性能にも制限される)
+    process ms : process 関数1回にかかった時間 (自分の処理の重さ)
+動画ファイルは元の動画の速さで再生する (処理が間に合わないときは遅くなる)．
 """
 
 import argparse
@@ -63,9 +69,9 @@ def to_bgr(img):
     return img
 
 
-def draw_status(img, fps, recording, source_name):
+def draw_status(img, fps, process_ms, recording, source_name):
     """画面左上に FPS と状態を描く"""
-    text = f"FPS: {fps:5.1f}  [{source_name}]"
+    text = f"FPS: {fps:5.1f}  process: {process_ms:5.1f} ms  [{source_name}]"
     cv2.putText(img, text, (10, 25), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 0), 3)
     cv2.putText(img, text, (10, 25), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 0), 1)
     if recording:
@@ -84,7 +90,7 @@ def parse_args(argv=None):
     return args
 
 
-def run(process, window="output", show_input=True, argv=None):
+def run(process, window="output", show_input=True, on_key=None, argv=None):
     """カメラ(または動画)から1フレームずつ読み込み，process に渡して結果を表示する
 
     process(frame) の戻り値は次のどちらか:
@@ -95,6 +101,7 @@ def run(process, window="output", show_input=True, argv=None):
         process: BGR画像を1枚受け取り，画像(または画像の辞書)を返す関数
         window: 結果を表示するウィンドウ名
         show_input: True なら入力画像も "input" ウィンドウに表示する
+        on_key: q, r, v, スペース 以外のキーが押されたときに呼ばれる関数 (引数はキーの文字)
         argv: コマンドライン引数(テスト用．通常は指定しない)
     """
     args = parse_args(argv)
@@ -107,6 +114,7 @@ def run(process, window="output", show_input=True, argv=None):
     writer = None
     paused = False
     fps = 0.0
+    process_ms = 0.0
     prev_time = time.perf_counter()
     n_frames = 0
     frame = None
@@ -125,7 +133,10 @@ def run(process, window="output", show_input=True, argv=None):
                 continue
 
         # 学生が書いた処理を呼ぶ(入力画像を書き換えられても大丈夫なようにコピーを渡す)
+        t0 = time.perf_counter()
         result = process(frame.copy())
+        t1 = time.perf_counter()
+        process_ms = 0.9 * process_ms + 0.1 * (1000 * (t1 - t0)) if process_ms > 0 else 1000 * (t1 - t0)
         outputs = result if isinstance(result, dict) else {window: result}
 
         # FPS (前フレームからの経過時間で計算し，表示がちらつかないよう平滑化)
@@ -150,10 +161,17 @@ def run(process, window="output", show_input=True, argv=None):
         for i, (name, img) in enumerate(outputs.items()):
             img = to_bgr(img).copy()
             if i == 0:
-                draw_status(img, fps, writer is not None, source_name)
+                draw_status(img, fps, process_ms, writer is not None, source_name)
             cv2.imshow(name, img)
 
-        key = cv2.waitKey(1) & 0xFF
+        # 動画ファイルは元の動画の速さで再生する
+        delay = 1
+        if not isinstance(source, int):
+            video_fps = cap.get(cv2.CAP_PROP_FPS)
+            if video_fps and 0 < video_fps <= 120:
+                elapsed_ms = 1000 * (time.perf_counter() - t0)
+                delay = max(1, int(1000 / video_fps - elapsed_ms))
+        key = cv2.waitKey(delay) & 0xFF
         if key == ord("q"):
             break
         elif key == ord(" "):
@@ -190,8 +208,35 @@ def run(process, window="output", show_input=True, argv=None):
             cap = open_capture(source)
             frame = None
             print(f"入力を切り替えた: {source}")
+        elif key != 255 and on_key is not None:
+            on_key(chr(key))
 
     if writer is not None:
         writer.release()
     cap.release()
     cv2.destroyAllWindows()
+
+
+def tile(images, cols=2, labels=None, width=None):
+    """複数の画像を格子状に並べて1枚にする (比較表示用)
+
+    Args:
+        images: 画像のリスト (グレースケールとカラーが混ざっていてもよい)
+        cols: 1行に並べる枚数
+        labels: 各画像の左上に書く文字列のリスト (省略可)
+        width: 1枚あたりの幅 (省略すると最初の画像の幅)．高さは縦横比を保って決まる
+    """
+    first = to_bgr(images[0])
+    w = width or first.shape[1]
+    h = int(first.shape[0] * w / first.shape[1])
+    cells = []
+    for i, img in enumerate(images):
+        cell = cv2.resize(to_bgr(img), (w, h))
+        if labels is not None and i < len(labels):
+            cv2.putText(cell, labels[i], (10, h - 12), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 0), 4)
+            cv2.putText(cell, labels[i], (10, h - 12), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 1)
+        cells.append(cell)
+    while len(cells) % cols != 0:
+        cells.append(np.zeros_like(cells[0]))
+    rows = [np.hstack(cells[i : i + cols]) for i in range(0, len(cells), cols)]
+    return np.vstack(rows)
