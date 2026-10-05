@@ -1,16 +1,17 @@
-# require skimage and sklearn
-# if 'skimage' or 'sklearn' was not found, run `uv sync` in the repository root
+from pathlib import Path
 
 import cv2
 import numpy as np
 from skimage.feature import hog
 from sklearn.neighbors import NearestNeighbors
 
+DATA_DIR = Path(__file__).resolve().parent / "data"
+
 cap = cv2.VideoCapture(0)
 
 # 特徴量の読み込み
-features = np.load("./data/features.npy")
-labels = np.load("./data/labels.npy")
+features = np.load(DATA_DIR / "features.npy")
+labels = np.load(DATA_DIR / "labels.npy")
 
 # 最近傍探索のモデルを定義
 model = NearestNeighbors(n_neighbors=1).fit(features)

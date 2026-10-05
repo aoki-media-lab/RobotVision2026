@@ -1,6 +1,10 @@
-import glob
+"""背景の画像を集める (s で保存, q で終了)．保存先: data/background/"""
+
+from pathlib import Path
 
 import cv2
+
+SAVE_DIR = Path(__file__).resolve().parent / "data" / "background"
 
 cap = cv2.VideoCapture(0)
 
@@ -10,8 +14,7 @@ screenshot = False
 photo = None
 
 # フォルダにある画像の枚数を取得
-data = glob.glob("./data/*.jpg")
-n_data = len(data)
+n_data = len(list(SAVE_DIR.glob("*.jpg")))
 
 # 実行
 while True:
@@ -27,7 +30,7 @@ while True:
         break
     # 写真を保存
     elif k == ord("s"):
-        cv2.imwrite(f"./data/{n_data}.jpg", frame)
+        cv2.imwrite(str(SAVE_DIR / f"{n_data}.jpg"), frame)
         n_data += 1
 
 cap.release()
