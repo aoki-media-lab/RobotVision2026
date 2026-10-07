@@ -15,8 +15,8 @@
 - 実験環境のPCでは GPU が使えない．すべて CPU のみで動作させること
 
 ### 講義スライド
-- 第1週スライド (後日公開)
-- 第2週スライド (後日公開)
+- [第1週スライド](https://docs.google.com/presentation/d/1Ks5Pxgi_X6Ol0vfsIcxbezAYdXUgkWylQ2XcfyWCkSU/edit?usp=sharing)
+- [第2週スライド](https://docs.google.com/presentation/d/1BUihe8Ij7WBF8Z5PVCHPCMXZl0joAJaxrH6fgZO92JE/edit?usp=sharing)
 - 調査テーマ・最終発表の説明スライド (後日公開)
 
 ## ソースコードのダウンロード
