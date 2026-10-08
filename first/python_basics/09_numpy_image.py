@@ -20,13 +20,13 @@ import numpy as np
 # ============================================================
 def task_1_1(img):
     """[課題1-1] img.shape から画像の高さと幅を取り出し，(高さ, 幅) のタプルで返せ"""
-    return ...  # TODO
+    return img.shape[:2]
 
 
 def task_1_2(img):
     """[課題1-2] 左上 (y=0, x=0) の画素の値を返せ．img[y, x] の順であることに注意
     (x, y の順で書く OpenCV の関数と逆なので混乱しやすい)"""
-    return ...  # TODO
+    return img[0,0]
 
 
 # ============================================================
@@ -37,7 +37,7 @@ def task_2_1(img):
     (上端 cy-100, 下端 cy+100, 左端 cx-100, 右端 cx+100)"""
     h, w = img.shape[:2]
     cy, cx = h // 2, w // 2
-    return ...  # TODO
+    return img[cy-100:cy+100,cx-100:cx+100]
 
 
 def random_crop(image, size, rng):
@@ -45,8 +45,8 @@ def random_crop(image, size, rng):
     左上の座標 (x0, y0) は，切り出した領域が画像からはみ出さない範囲でランダムに選ぶ．
     rng.integers(0, n) は 0 以上 n 未満の整数を1つ返す"""
     h, w = image.shape[:2]
-    y0 = ...  # TODO
-    x0 = ...  # TODO
+    y0 = rng.integers(0,h - size + 1)
+    x0 = rng.integers(0,w - size + 1)
     assert y0 is not ... and x0 is not ..., "課題2-2 がまだ未記入"
     return image[y0 : y0 + size, x0 : x0 + size]
 
@@ -56,17 +56,17 @@ def random_crop(image, size, rng):
 # ============================================================
 def task_3_1(img):
     """[課題3-1] img から R チャンネルだけを取り出して返せ (結果は (高さ, 幅) の2次元配列)"""
-    return ...  # TODO
+    return img[:,:,2]
 
 
 def task_3_2(img):
     """[課題3-2] スライスだけを使って，img を左右反転して返せ (cv2.flip(img, 1) と同じ結果)"""
-    return ...  # TODO
+    return img[:,::-1,:]
 
 
 def task_3_3(img):
     """[課題3-3] スライスだけを使って，BGR の並びを RGB に入れ替えて返せ"""
-    return ...  # TODO
+    return img[:,:,::-1]
 
 
 # ============================================================
@@ -76,7 +76,12 @@ def task_4_1(img):
     """[課題4-1] グレースケールの値 = 0.299 R + 0.587 G + 0.114 B を numpy の計算だけで求め，
     dtype を np.uint8 にして返せ (cv2.cvtColor(img, cv2.COLOR_BGR2GRAY) との差が 1 以下なら OK)．
     計算途中は小数になるので，最後に np.round してから astype する"""
-    return ...  # TODO
+    B = img[:,:,0]
+    G = img[:,:,1]
+    R = img[:,:,2]
+
+    gray = 0.299 * R + 0.587 * G + 0.114 * B
+    return np.round(gray).astype(np.uint8)
 
 
 # ============================================================
@@ -86,7 +91,9 @@ def task_5_1(img):
     """[バグ修正5-1] 画像を明るくしたくて全画素に 100 を足したが，明るいはずの部分が暗くなってしまった．
     uint8 は 0〜255 しか表せないことがヒント．
     255 を超えた画素は 255 になるように直せ (白い部分は白のまま，暗い部分だけ明るくなる)"""
-    return img + 100
+    img_int = img.astype(int) +100
+    return np.clip(img_int, 0, 255).astype(np.uint8
+    )
 
 
 if __name__ == "__main__":

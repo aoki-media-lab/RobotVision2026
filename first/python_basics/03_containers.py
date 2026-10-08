@@ -16,7 +16,7 @@
 # ============================================================
 def task_1_1(numbers):
     """[課題1-1] 負のインデックスを使って，numbers の最後の要素を返せ"""
-    return ...  # TODO
+    return numbers[-1]  # TODO
 
 
 # ============================================================
@@ -24,12 +24,12 @@ def task_1_1(numbers):
 # ============================================================
 def task_2_1(numbers):
     """[課題2-1] スライスを使って numbers から 20, 30, 40 を取り出して返せ"""
-    return ...  # TODO
+    return numbers[1:4]  # TODO
 
 
 def task_2_2(numbers):
     """[課題2-2] スライスを使って，numbers を末尾から1つおきに取り出して返せ (ステップに負の値を使う)"""
-    return ...  # TODO
+    return numbers[::-2]  # TODO
 
 
 # ============================================================
@@ -39,6 +39,7 @@ def task_3_1():
     """[課題3-1] append を使って colors の末尾に "pink" を追加し，colors を返せ"""
     colors = ["blue", "green"]
     # TODO: ここに1行書く
+    colors.append("pink")
 
     return colors
 
@@ -50,7 +51,7 @@ def task_3_2():
         [4, 5, 6],
         [7, 8, 9],
     ]
-    return ...  # TODO
+    return grid[1][-1]  # TODO
 
 
 # ============================================================
@@ -59,7 +60,8 @@ def task_3_2():
 def task_4_1():
     """[課題4-1] point をアンパックして x と y に取り出し，入れ替えたタプル (y, x) を返せ"""
     point = (120, 80)
-    return ...  # TODO
+    x, y = point
+    return y, x  # TODO
 
 
 # ============================================================
@@ -76,7 +78,7 @@ def make_hsv_range():
 def task_5_1():
     """[課題5-1] hsv_range から green の upper を取り出して返せ"""
     hsv_range = make_hsv_range()
-    return ...  # TODO
+    return hsv_range["green"]["upper"]  # TODO
 
 
 def task_5_2():
@@ -84,6 +86,10 @@ def task_5_2():
     lower は [160, 50, 50]，upper は [170, 255, 255]"""
     hsv_range = make_hsv_range()
     # TODO: ここに1行書く
+    hsv_range["pink"] = {
+        "lower": [160, 50, 50],
+        "upper": [170, 255, 255],
+    }
 
     return hsv_range
 
@@ -91,7 +97,7 @@ def task_5_2():
 def task_5_3():
     """[課題5-3] .get を使って hsv_range から "purple" を取り出し，無ければ "なし" を返せ"""
     hsv_range = make_hsv_range()
-    return ...  # TODO
+    return hsv_range.get("purple", "なし")  # TODO
 
 
 # ============================================================
@@ -100,7 +106,7 @@ def task_5_3():
 def task_6_1(numbers):
     """[バグ修正6-1] numbers の最後の要素を返したいが，エラーになる．
     エラーの種類 (〜Error) とメッセージを読んで，原因を考えて直せ (len を使ったまま直すこと)"""
-    return numbers[len(numbers)]
+    return numbers[len(numbers) - 1]
 
 
 if __name__ == "__main__":

@@ -18,8 +18,14 @@ def task_1_1(area):
     1000 以上 → "large"，300 以上 1000 未満 → "medium"，それ以外 → "small"
     """
     # TODO
+    if area >= 1000:
+        answer = "large"
+    elif area >= 300:
+        answer = "medium"
+    else:
+        answer = "small"
 
-    return ...
+    return answer
 
 
 # ============================================================
@@ -29,6 +35,8 @@ def task_2_1():
     """[課題2-1] for 文と range を使って，1 から 10 までの整数の2乗の和を返せ"""
     total = 0
     # TODO: ここに for 文を書く
+    for i in range(1, 11):
+        total += i ** 2
 
     return total
 
@@ -39,6 +47,9 @@ def task_2_2():
     areas = {"red": 1200, "blue": 300, "green": 2500}
     big_colors = []
     # TODO: ここに for 文を書く
+    for color, area in areas.items():
+        if area >= 1000:
+            big_colors.append(color)
 
     return big_colors
 
@@ -50,6 +61,8 @@ def task_3_1():
     """[課題3-1] 2**n が 1000 を超える最小の n を while 文で求めて返せ"""
     n = 0
     # TODO: ここに while 文を書く
+    while 2 ** n <= 1000:
+        n += 1
 
     return n
 
@@ -63,6 +76,15 @@ def task_4_1():
     """
     fizzbuzz = []
     # TODO: ここに for 文を書く
+    for n in range(1, 16):
+        if n % 15 == 0:
+            fizzbuzz.append("FizzBuzz")
+        elif n % 5 == 0:
+            fizzbuzz.append("Buzz")
+        elif n % 3 == 0:
+            fizzbuzz.append("Fizz")
+        else:
+            fizzbuzz.append(str(n))
 
     return fizzbuzz
 
@@ -74,18 +96,19 @@ def task_5_1():
     """[バグ修正5-1] 0 から 9 までの数のうち 3 の倍数の和 (0+3+6+9) を返したいが，結果が合わない．
     エラーは出ないので，print を入れるなどして原因を探して直せ"""
     total = 0
-    for i in range(9):
+    for i in range(10):
+        print(i)
         if i % 3 == 0:
             total += i
     return total
 
 
 if __name__ == "__main__":
-    print("課題1-1a:", task_1_1(850))
-    print("課題1-1b:", task_1_1(1000))
-    print("課題1-1c:", task_1_1(120))
-    print("課題2-1:", task_2_1())
-    print("課題2-2:", task_2_2())
-    print("課題3-1:", task_3_1())
-    print("課題4-1:", task_4_1())
+    # print("課題1-1a:", task_1_1(850))
+    # print("課題1-1b:", task_1_1(1000))
+    # print("課題1-1c:", task_1_1(120))
+    # print("課題2-1:", task_2_1())
+    # print("課題2-2:", task_2_2())
+    # print("課題3-1:", task_3_1())
+    # print("課題4-1:", task_4_1())
     print("課題5-1:", task_5_1())

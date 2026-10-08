@@ -19,17 +19,18 @@ import numpy as np
 # ============================================================
 def task_1_1(arr):
     """[課題1-1] arr の要素が 4 より大きいかどうかを表す bool 配列を返せ"""
-    return ...  # TODO
+    return arr > 4
 
 
 def task_1_2(arr):
     """[課題1-2] arr のうち 4 より大きい要素の個数を返せ (True は 1，False は 0 として足し算できる)"""
-    return ...  # TODO
+    mask = arr > 4
+    return mask.sum()
 
 
 def task_1_3(arr):
     """[課題1-3] bool 配列を添字に使って，arr から 4 より大きい要素だけを取り出して返せ"""
-    return ...  # TODO
+    return arr[arr > 4]
 
 
 # ============================================================
@@ -38,13 +39,13 @@ def task_1_3(arr):
 def task_2_1(hue):
     """[課題2-1] hue が 10 以上 40 以下の要素を True とする bool 配列を返せ
     (cv2.inRange がやっていることと同じ)"""
-    return ...  # TODO
+    return (hue >= 10) & (hue <= 40)
 
 
 def task_2_2(hue):
     """[課題2-2] 赤色の Hue は 0 付近と 179 付近の両端にまたがる．
     hue が 10 未満 または 170 より大きい要素を True とする bool 配列を返せ"""
-    return ...  # TODO
+    return (hue < 10) | (hue > 170)
 
 
 # ============================================================
@@ -54,7 +55,7 @@ def task_3_1():
     """[課題3-1] gray を「128 以上なら 255，それ以外は 0」に二値化して返せ．
     画像として扱えるよう，dtype は np.uint8 にすること"""
     gray = np.array([[10, 200, 130], [90, 250, 40]], dtype=np.uint8)
-    return ...  # TODO
+    return np.where(gray >= 128, 255, 0).astype(np.uint8)
 
 
 # ============================================================
@@ -65,7 +66,9 @@ def task_4_1():
     np.where(条件) で白い画素の (行の添字の配列, 列の添字の配列) を取り出して使う"""
     binary = np.zeros((6, 8), dtype=np.uint8)
     binary[2:5, 3:7] = 255  # 2〜4 行目，3〜6 列目 が白
-    return ...  # TODO
+    idy, idx = np.where(binary == 255)
+    print(idx,idy)
+    return min(idx),min(idy),max(idx),max(idy)
 
 
 # ============================================================
@@ -74,7 +77,7 @@ def task_4_1():
 def task_5_1(arr):
     """[バグ修正5-1] arr に 4 より大きい要素が1つでもあれば "大きい値がある"，なければ "ない" を返したいが，
     エラーになる．エラーメッセージが勧めている方法のどちらを使えばよいか考えて直せ"""
-    if arr > 4:
+    if np.any(arr > 4):
         return "大きい値がある"
     else:
         return "ない"

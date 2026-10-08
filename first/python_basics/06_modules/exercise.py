@@ -19,9 +19,9 @@ from my_geometry import center, clamp
 
 def task_4():
     """[課題4] modules/C.py から c を import し (use_module.py を参考に)，c() の戻り値を返せ"""
+    from modules.C import c
     # TODO: import の行を書く
-
-    return ...  # TODO
+    return c()
 
 
 if __name__ == "__main__":
